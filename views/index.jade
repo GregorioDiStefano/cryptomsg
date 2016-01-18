@@ -1,19 +1,31 @@
 html(ng-app="privnote")
   head
     title!= title
-    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js")
+    script(src="/static/angular.min.js")
     script(src="/static/pbkdf2.js")
     script(src="/static/frontend.js")
-    script(src="/static/openpgp.min.js")
     script(src="/static/aes.js")
-    script(src="/static/sha256.min.js")
+    script(src="/static/ngDialog.min.js")
+    script(src="/static/qrcode.min.js")
+    script(src="/static/sweetalert.min.js")
+
+    link(rel="stylesheet", type="text/css", href="/static/ngDialog-theme-default.min.css")
+    link(rel="stylesheet", type="text/css", href="/static/ngDialog.min.css")
+    link(rel="stylesheet", type="text/css", href="/static/style.css")
+    link(rel="stylesheet", type="text/css", href="/static/sweetalert.css")
+
   body
     h1!= message
     div(id="keys", ng-controller="encryption")
-        textarea(ng-model="data", rows="30", cols="100", placeholder="Enter message here")
-        br
-        input(type="text", ng-model="password")
-        input(type="checkbox", name="vehicle", value="Car", checked)
-        | Delete after successfully retrieved
-        input(ng-click="submit()", type="submit", value="Submit")
+        textarea(ng-model="data", rows="30", cols="100", placeholder="Enter message here", ng-disabled="file_set", ng-change="set_text(data)")
+        p
+        | or file: 
+        input(type="file", ng-model="file", onchange="angular.element(this).scope().set_file(this)", ng-disabled="text_set")
+        p
+        form
+            input(type="text", ng-model="password", placeholder="Password", required)
+            p
+            input(type="checkbox", ng-model="one_read", ng-click='delete_on_read(one_read)', checked)
+            | Delete after retrieved
+            input(ng-click="submit()", type="submit", value="Submit")
 
