@@ -1,0 +1,17 @@
+html(ng-app="privnote")
+  head
+    script(src="/static/angular.min.js")
+    script(src="/static/pbkdf2.js")
+    script(src="/static/frontend.js")
+    script(src="/static/openpgp.min.js")
+    script(src="/static/aes.js")
+    script(src="/static/ngDialog.min.js")
+    script(src="/static/FileSaver.min.js")
+
+    link(rel="stylesheet", type="text/css", href="/static/ngDialog-theme-default.min.css")
+    link(rel="stylesheet", type="text/css", href="/static/ngDialog.min.css")
+    link(rel="stylesheet", type="text/css", href="/static/style.css")
+  body
+    div(id="decryption", ng-controller="decryption")
+        input(ng-model="password", placeholder="password", type="text")
+        input(ng-click="decrypt()", type="submit", value="Decrypt")
