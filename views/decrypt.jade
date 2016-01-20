@@ -15,6 +15,11 @@ html(ng-app="privnote")
 
   body
     div(id="decryption", ng-controller="decryption")
-        input(ng-model="password", placeholder="password", type="text")
-        input(ng-click="decrypt()", type="submit", value="Decrypt")
-        textarea(ng-model="message_view", rows="30", cols="100")
+        div(class="center_div alert-box warning read_once_alert")
+            span warning: 
+            | The encrypted message/data will be destroy 5 minutes after pressing the button.
+        div(class="center")
+            input(ng-model="password", placeholder="password", type="text")
+            input(ng-click="decrypt()", type="submit", value="Decrypt")
+        br
+        textarea(ng-model="message_view", class="center_div", rows="30", cols="100")

@@ -18,28 +18,20 @@ function get_key_and_iv(salt, password) {
         return { "key": key, "iv": iv }
 }
 
-privnote.directive('customOnChange', function() {
-  return {
-    restrict: 'A',
-    link: function (scope, element, attrs) {
-      var onChangeFunc = scope.$eval(attrs.customOnChange);
-      element.bind('change', onChangeFunc);
-    }
-  };
-});
-
-
 privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", function($scope, $rootScope, $http, ngDialog){
     $scope.file_set = false
     $scope.text_set = false
+
+    var port = (location.port == 80 || location.port == 443) ? "" : ":" + location.port
+    $scope.url = location.protocol + "//" + location.hostname + port + "/"
+
     var filename_to_encrypt = ""
     var file_to_encrypt_data = ""
     var one_time_read
-    var data_id = ""
 
     $rootScope.$on('ngDialog.opened', function (e, $dialog) {
         var qrcode = new QRCode("qrcode", {
-            text: $scope.data_id,
+            text: $scope.value,
             width: 128*1.5,
             height: 128*1.5,
             colorDark : "#000000",
@@ -76,10 +68,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
             headers: {'Content-Type': 'application/json'}
           }).success(function (data, status, headers, config) {
 
-
-
                 $scope.value = data.id
-                $scope.data_id = data.id
 
                 ngDialog.open({
                     template: '/static/dialog.html',
@@ -100,6 +89,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
 
             if (filesize > 5 * 1024 * 1024) {
                 throw "File larger than 5mb"
+                return
             }
 
             filename_to_encrypt = file_obj.name
@@ -110,7 +100,9 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
                 file_to_encrypt_data = read.result
             }
         } catch (e) {
-            var filename = undefined
+            filename = undefined
+            file_obj = undefined
+            document.getElementById("file_input").value = ""
             sweetAlert("Error", e, "error");
         }
 
@@ -171,20 +163,16 @@ privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
               { iv: iv, mode: CryptoJS.mode.CBC }
             ).toString(CryptoJS.enc.Utf8)
 
-
-            var bytes = new Uint8Array(plaintext.length);
-            for (var i=0; i<plaintext.length; i++)
-                bytes[i] = plaintext.charCodeAt(i);
-
-            var blob = new Blob([bytes], {type: "application/octet-stream"});
-
             if (filename) {
+                var bytes = new Uint8Array(plaintext.length);
+                for (var i=0; i<plaintext.length; i++)
+                    bytes[i] = plaintext.charCodeAt(i);
+
+                var blob = new Blob([bytes], {type: "application/octet-stream"});
                 saveAs(blob, filename);
             } else {
-                console.log(plaintext)
                 $scope.message_view = plaintext
             }
-
         })
     }
 }]);

@@ -17,7 +17,7 @@ function get_encrypted(id, callback) {
                 model.del_key(id, function() {
                     console.log("Deleted: ", id)
                 })
-            }, 1000 * 1)
+            }, 1000 * 60 * 5)
         }
         callback(v)
     })

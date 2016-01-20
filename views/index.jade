@@ -20,7 +20,7 @@ html(ng-app="privnote")
         textarea(ng-model="data", rows="30", cols="100", placeholder="Enter message here", ng-disabled="file_set", ng-change="set_text(data)")
         p
         | or file: 
-        input(type="file", ng-model="file", onchange="angular.element(this).scope().set_file(this)", ng-disabled="text_set")
+        input(type="file", ng-model="file", id="file_input", onchange="angular.element(this).scope().set_file(this)", ng-disabled="text_set")
         p
         form
             input(type="text", ng-model="password", placeholder="Password", required)

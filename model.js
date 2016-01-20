@@ -6,8 +6,8 @@ var gen_keys = function() {
        keys = [],
        tmp = ""
 
-   for (i = 16; i <= 25; i++) {
-       for (j = 0; j < 5; j++) {
+   for (i = 10; i <= 12; i++) {
+       for (j = 0; j < 4; j++) {
            for (k = 0; k < i; k++) {
               tmp += letters[Math.floor((Math.random() * letters.length) + 0)]
            }

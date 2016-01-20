@@ -6,14 +6,49 @@ div#keys {
    text-align: center;
 }
 
-:-moz-placeholder { /* Firefox 18- */
-   text-align: center;  
+:-moz-placeholder {
+   text-align: center;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
-   text-align: center;  
+::-moz-placeholder {
+   text-align: center;
 }
 
-:-ms-input-placeholder {  
-   text-align: center; 
+:-ms-input-placeholder {
+   text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+.center_div {
+    display: table !important;
+    margin: 0 auto !important;
+}
+
+#qrcode > img {
+    display: initial !important;
+}
+
+.warning {
+    background:#fff8c4 url('images/warning.png') no-repeat 10px 50%;
+    border:1px solid #f2c779;
+}
+
+.alert-box {
+    color:#555;
+    border-radius:10px;
+    font-family:Tahoma,Geneva,Arial,sans-serif;font-size:11px;
+    padding:10px 36px;
+    margin:10px;
+}
+
+.alert-box span {
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.read_once_alert {
+    width: 25%;
 }
