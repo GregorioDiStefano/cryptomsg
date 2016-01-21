@@ -33,7 +33,7 @@ app.get('/:id', function (req, res) {
 
     model.get_key(id, function(cb) {
         if(cb instanceof Error)
-            res.send("")
+            res.status(404).send("Invalid key")
         else {
             one_time_read = JSON.parse(cb)["one_time_read"]
             res.render('decrypt', {"one_time_read": one_time_read})

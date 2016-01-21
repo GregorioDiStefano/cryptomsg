@@ -52,3 +52,7 @@ div#keys {
 .read_once_alert {
     width: 25%;
 }
+
+#decryption_form {
+    padding-top: 15px;
+}

@@ -15,7 +15,6 @@ var gen_keys = function() {
        tmp = ""
        }
    }
-   console.log("Possible keys:", keys)
    return keys
 }
 

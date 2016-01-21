@@ -21,6 +21,7 @@ function get_key_and_iv(salt, password) {
 privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", function($scope, $rootScope, $http, ngDialog){
     $scope.file_set = false
     $scope.text_set = false
+    $scope.id = ""
 
     var port = (location.port == 80 || location.port == 443) ? "" : ":" + location.port
     $scope.url = location.protocol + "//" + location.hostname + port + "/"
@@ -31,7 +32,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
 
     $rootScope.$on('ngDialog.opened', function (e, $dialog) {
         var qrcode = new QRCode("qrcode", {
-            text: $scope.value,
+            text: $scope.url + $scope.id,
             width: 128*1.5,
             height: 128*1.5,
             colorDark : "#000000",
@@ -68,7 +69,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
             headers: {'Content-Type': 'application/json'}
           }).success(function (data, status, headers, config) {
 
-                $scope.value = data.id
+                $scope.id = data.id
 
                 ngDialog.open({
                     template: '/static/dialog.html',
@@ -135,6 +136,7 @@ privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
         var salt = ""
         var ciphertext = ""
         var filename = ""
+        $scope.message_view = ""
 
         var response = function(data) {
                 $http.get("/get" + id)
@@ -161,7 +163,17 @@ privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
               },
               CryptoJS.enc.Hex.parse(key),
               { iv: iv, mode: CryptoJS.mode.CBC }
-            ).toString(CryptoJS.enc.Utf8)
+            )
+
+
+            try {
+                plaintext = plaintext.toString(CryptoJS.enc.Utf8)
+                if (plaintext == "")
+                    throw Error()
+            } catch (e) {
+                alert("Wrong password")
+                return
+            }
 
             if (filename) {
                 var bytes = new Uint8Array(plaintext.length);
