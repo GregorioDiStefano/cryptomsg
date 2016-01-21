@@ -1,17 +1,17 @@
 html(ng-app="privnote")
   head
-    script(src="/static/angular.min.js")
-    script(src="/static/pbkdf2.js")
-    script(src="/static/frontend.js")
-    script(src="/static/aes.js")
-    script(src="/static/ngDialog.min.js")
-    script(src="/static/FileSaver.min.js")
-    script(src="/static/sweetalert.min.js")
+    script(src="/static/js/angular.min.js")
+    script(src="/static/js/pbkdf2.js")
+    script(src="/static/js/aes.js")
+    script(src="/static/js/ngDialog.min.js")
+    script(src="/static/js/FileSaver.min.js")
+    script(src="/static/js/sweetalert.min.js")
+    script(src="/static/frontend/frontend.js")
 
-    link(rel="stylesheet", type="text/css", href="/static/ngDialog-theme-default.min.css")
-    link(rel="stylesheet", type="text/css", href="/static/ngDialog.min.css")
-    link(rel="stylesheet", type="text/css", href="/static/style.css")
-    link(rel="stylesheet", type="text/css", href="/static/sweetalert.css")
+    link(rel="stylesheet", type="text/css", href="/static/css/ngDialog-theme-default.min.css")
+    link(rel="stylesheet", type="text/css", href="/static/css/ngDialog.min.css")
+    link(rel="stylesheet", type="text/css", href="/static/css/style.css")
+    link(rel="stylesheet", type="text/css", href="/static/css/sweetalert.css")
 
   body
     div(id="decryption", ng-controller="decryption")
@@ -20,7 +20,8 @@ html(ng-app="privnote")
                 span warning: 
                 | The encrypted message/data will be destroy 5 minutes after pressing the button.
         div(id="decryption_form", class="center")
-            input(ng-model="password", placeholder="password", type="text")
-            input(ng-click="decrypt()", type="submit", value="Decrypt")
+            form
+                input(ng-model="password", placeholder="password", type="password", required)
+                input(ng-click="decrypt()", type="submit", value="Decrypt")
         br
         textarea(ng-model="message_view", ng-hide="!message_view", class="center_div", rows="30", cols="100")
