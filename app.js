@@ -3,11 +3,13 @@ var app = express();
 var model = require("./model");
 var controller = require("./controllers/crypto")
 var bodyParser = require('body-parser')
+var favicon = require('serve-favicon')
 
 app.set('view engine', 'jade')
 app.set('views', './views')
 app.use('/static', express.static("static"));
 app.use(bodyParser.json(({limit: '10mb'})))
+app.use(favicon('static/favicon.ico'));
 
 app.get('/', function (req, res) {
     res.render('index')
@@ -28,7 +30,15 @@ app.get('/get/:id', function (req, res) {
 
 app.get('/:id', function (req, res) {
     var id = req.params.id;
-    res.render('decrypt')
+
+    model.get_key(id, function(cb) {
+        if(cb instanceof Error)
+            res.send("")
+        else {
+            one_time_read = JSON.parse(cb)["one_time_read"]
+            res.render('decrypt', {"one_time_read": one_time_read})
+        }
+    })
 });
 
 var server = app.listen(3000, function () {

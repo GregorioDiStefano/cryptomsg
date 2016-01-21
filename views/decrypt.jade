@@ -15,9 +15,10 @@ html(ng-app="privnote")
 
   body
     div(id="decryption", ng-controller="decryption")
-        div(class="center_div alert-box warning read_once_alert")
-            span warning: 
-            | The encrypted message/data will be destroy 5 minutes after pressing the button.
+        if (one_time_read)
+            div(class="center_div alert-box warning read_once_alert")
+                span warning: 
+                | The encrypted message/data will be destroy 5 minutes after pressing the button.
         div(class="center")
             input(ng-model="password", placeholder="password", type="text")
             input(ng-click="decrypt()", type="submit", value="Decrypt")
