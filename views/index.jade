@@ -1,31 +1,19 @@
 html(ng-app="privnote")
   head
-    title!= title
-    script(src="/static/js/angular.min.js")
-    script(src="/static/js/pbkdf2.js")
-    script(src="/static/frontend/frontend.js")
-    script(src="/static/js/aes.js")
-    script(src="/static/js/ngDialog.min.js")
-    script(src="/static/js/qrcode.min.js")
-    script(src="/static/js/sweetalert.min.js")
-
-    link(rel="stylesheet", type="text/css", href="/static/css/ngDialog-theme-default.min.css")
-    link(rel="stylesheet", type="text/css", href="/static/css/ngDialog.min.css")
-    link(rel="stylesheet", type="text/css", href="/static/css/style.css")
-    link(rel="stylesheet", type="text/css", href="/static/css/sweetalert.css")
-
+    include resources.jade
   body
-    h1!= message
+    include header.jade
     div(id="keys", ng-controller="encryption")
-        textarea(ng-model="data", rows="30", cols="100", placeholder="Enter message here", ng-disabled="file_set", ng-change="set_text(data)")
+        textarea(ng-model="data", rows="30", cols="100", placeholder="Enter you message here", ng-disabled="file_set", ng-change="set_text(data)")
         p
         | or file: 
-        input(type="file", ng-model="file", id="file_input", onchange="angular.element(this).scope().set_file(this)", ng-disabled="text_set")
+        input(type="file", ng-model="file", id="file_input", onchange="angular.element(this).scope().set_file(this)", ng-disabled="text_set", class="pure-button button-large")
         p
-        form
+        form(class="pure-form")
             input(type="text", ng-model="password", placeholder="Password", required)
             p
             input(type="checkbox", ng-model="one_read", ng-click='delete_on_read(one_read)', checked)
             | Delete after retrieved
-            input(ng-click="submit()", type="submit", value="Submit")
+            br
+            input(ng-click="submit()", type="submit", value="Submit", id="encrypt_button", class="pure-button button-large")
 

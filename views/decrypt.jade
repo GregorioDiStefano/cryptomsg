@@ -1,19 +1,8 @@
 html(ng-app="privnote")
   head
-    script(src="/static/js/angular.min.js")
-    script(src="/static/js/pbkdf2.js")
-    script(src="/static/js/aes.js")
-    script(src="/static/js/ngDialog.min.js")
-    script(src="/static/js/FileSaver.min.js")
-    script(src="/static/js/sweetalert.min.js")
-    script(src="/static/frontend/frontend.js")
-
-    link(rel="stylesheet", type="text/css", href="/static/css/ngDialog-theme-default.min.css")
-    link(rel="stylesheet", type="text/css", href="/static/css/ngDialog.min.css")
-    link(rel="stylesheet", type="text/css", href="/static/css/style.css")
-    link(rel="stylesheet", type="text/css", href="/static/css/sweetalert.css")
-
+    include resources.jade
   body
+    include header.jade
     div(id="decryption", ng-controller="decryption")
         if (one_time_read)
             div(class="center_div alert-box warning read_once_alert")
@@ -21,7 +10,14 @@ html(ng-app="privnote")
                 | The encrypted message/data will be destroy 5 minutes after pressing the button.
         div(id="decryption_form", class="center")
             form
-                input(ng-model="password", placeholder="password", type="password", required)
-                input(ng-click="decrypt()", type="submit", value="Decrypt")
+                input(ng-model="password", placeholder="password", type="password", ng-hide="message_view", required)
+                input(ng-click="decrypt()", type="submit", value="Decrypt", ng-hide="message_view")
         br
-        textarea(ng-model="message_view", ng-hide="!message_view", class="center_div", rows="30", cols="100")
+        textarea(ng-model="message_view", ng-hide="!message_view", class="center_div", rows="30", cols="100", readonly)
+
+        div(class="cssload-thecube", ng-show="spinner")
+            div(class="cssload-cube cssload-c1")
+            div(class="cssload-cube cssload-c2")
+            div(class="cssload-cube cssload-c4")
+            div(class="cssload-cube cssload-c3")
+

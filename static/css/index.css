@@ -1,0 +1,13 @@
+
+body {
+    font-family: 'Inconsolata';
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#header {
+    height: 5%;
+    background: #E4EFFF;
+    margin-bottom: 25px;
+}

@@ -32,7 +32,7 @@ div#keys {
 }
 
 .warning {
-    background:#fff8c4 url('images/warning.png') no-repeat 10px 50%;
+    background:#fff8c4 url('/static/images/warning.png') no-repeat 10px 50%;
     border:1px solid #f2c779;
 }
 
@@ -54,5 +54,33 @@ div#keys {
 }
 
 #decryption_form {
-    padding-top: 15px;
+    margin-top: 120px;
+}
+
+body {
+    font-family: 'Inconsolata';
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#header {
+    height: 100px;
+    background: #E4EFFF;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+#logo_img {
+    vertical-align: top;
+    display: inline-block;
+    clear: right;
+}
+
+#logo_text {
+    vertical-align: text-bottom;
+}
+
+#encrypt_button {
+    margin-top: 20px;
 }
