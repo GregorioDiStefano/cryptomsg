@@ -84,3 +84,7 @@ body {
 #encrypt_button {
     margin-top: 20px;
 }
+
+.chkbox {
+    margin-right: 10px !important;
+}
