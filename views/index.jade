@@ -4,7 +4,13 @@ html(ng-app="privnote")
   body
     div(id="wrapper")
         include header.jade
+
         div(id="content_encrypt", ng-controller="encryption")
+            div(id="left_side", ng-show="storage_set")
+                p="Your recent links"
+                    ul
+                        li(ng-repeat="link in links")
+                            {{ link }}
             textarea(ng-model="data", rows="20", cols="80", placeholder="Enter you message here", ng-disabled="file_set", ng-change="set_text(data)")
             p
             | or file: 

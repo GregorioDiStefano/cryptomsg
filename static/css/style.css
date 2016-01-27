@@ -1,6 +1,7 @@
 div#content_encrypt {
     text-align: center;
     padding-bottom: 100px; /* height of footer */
+    overflow:auto;
 }
 
 ::-webkit-input-placeholder {
@@ -109,4 +110,41 @@ html, body {
 
 .chkbox {
     margin-right: 10px !important;
+}
+
+.nav {
+    width: 580px;
+    text-align: center;
+    padding-right: 40px;
+}
+
+#footer > ul > li {
+    display: inline;
+    text-align: center;
+    margin-right: 100px;
+}
+
+#footer > ul {
+    list-style-type: none;
+    margin: 2px auto;
+    line-height: 5.4;
+}
+
+#left_side > ul {
+    list-style-type: none;
+}
+
+a:link {
+    color: black;
+}
+
+a:visited {
+    color: black;
+}
+
+#left_side {
+    float: right;
+    height: 50%;
+    width: 15%;
+    position: absolute;
 }

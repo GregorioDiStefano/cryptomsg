@@ -1,27 +1,36 @@
 var privnote = angular.module('privnote', ['ngDialog']);
 
 function get_key_and_iv(salt, password) {
-        var iterations = 1000;
-        var keySize = 256;
-        var ivSize = 128;
+    var iterations = 1000;
+    var keySize = 256;
+    var ivSize = 128;
 
-        var output = CryptoJS.PBKDF2(password, salt, {
-                keySize: (keySize+ivSize)/32,
-                iterations: iterations
-        });
+    var output = CryptoJS.PBKDF2(password, salt, {
+            keySize: (keySize+ivSize)/32,
+            iterations: iterations
+    });
 
-        output.clamp();
+    output.clamp();
 
-        var key = CryptoJS.lib.WordArray.create(output.words.slice(0, keySize/32));
-        var iv = CryptoJS.lib.WordArray.create(output.words.slice(keySize/32));
+    var key = CryptoJS.lib.WordArray.create(output.words.slice(0, keySize/32));
+    var iv = CryptoJS.lib.WordArray.create(output.words.slice(keySize/32));
 
-        return { "key": key, "iv": iv };
+    return { "key": key, "iv": iv };
 }
 
+
+Storage.prototype.setObj = function(key, obj) {
+    return this.setItem(key, JSON.stringify(obj));
+};
+Storage.prototype.getObj = function(key) {
+    return JSON.parse(this.getItem(key));
+};
 
 privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", function($scope, $rootScope, $http, ngDialog){
     $scope.file_set = false;
     $scope.text_set = false;
+    $scope.storage_set = get_recent_links();
+    $scope.links = get_recent_links();
     $scope.id = "";
 
     var port = (location.port == 80 || location.port == 443) ? "" : ":" + location.port;
@@ -31,7 +40,25 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
     var file_to_encrypt_data = "";
     var one_time_read;
 
+    function set_recent_link(uid) {
+        if (localStorage.getObj("links") === null) {
+            localStorage.setObj("links", uid);
+            $scope.storage_set = true;
+        } else {
+            localStorage.setObj("links", uid + "," + localStorage.getObj("links"));
+            $scope.links = get_recent_links();
+        }
+    }
+
+    function get_recent_links() {
+        var links = localStorage.getObj("links");
+        if (links)
+            return links.split(",").slice(0, 20);
+        return false;
+    }
+
     $rootScope.$on('ngDialog.opened', function (e, $dialog) {
+        set_recent_link($scope.id);
         var qrcode = new QRCode("qrcode", {
             text: $scope.url + $scope.id,
             width: 128*1.5,
