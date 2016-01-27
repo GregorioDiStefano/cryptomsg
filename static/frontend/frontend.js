@@ -42,13 +42,17 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
         });
     });
 
-    $scope.submit = function() {
+    $scope.submit = function($event) {
+        var button = $event.currentTarget;
+
         if (!$scope.password) {
             return;
         } else if (!$scope.file_set && !$scope.text_set) {
             sweetAlert("Error", "No message entered or file selected!");
             return;
         }
+
+        button.setAttribute("disabled", "true");
 
         var plaintext = $scope.data ? $scope.data : file_to_encrypt_data;
         var password = $scope.password;
@@ -76,8 +80,8 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
                                    "one_time_read": one_time_read }),
             headers: {'Content-Type': 'application/json'}
           }).success(function (data, status, headers, config) {
-
                 $scope.id = data.id;
+                button.removeAttribute("disabled");
 
                 ngDialog.open({
                     template: '/static/dialog.html',
@@ -87,6 +91,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
 
             }).error(function (data, status, headers, config) {
                 $scope.status = status + ' ' + headers;
+                button.removeAttribute("disabled");
             });
     };
 

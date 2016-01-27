@@ -1,9 +1,13 @@
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="/static/ngDialog-theme-default.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/ngDialog-theme-default.min.css"/
+>
+        <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css"/>
         <script type="text/ng-template" id="externalTemplate.html"></script>
+
     </head>
-    <body>
+    <body style="font-family: 'Inconsolata' !important;" >
+        <p style="text-align:center;">Share the link/QR code with the recipient</p>
         <p style="text-align:center"><code><a href="{{url}}{{id}}">{{id}}</a></code></p>
         <div id="qrcode" class="center"></div>
     </body>

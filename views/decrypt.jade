@@ -11,7 +11,8 @@ html(ng-app="privnote")
         div(id="decryption_form", class="center")
             form
                 input(ng-model="password", placeholder="password", type="password", ng-hide="message_view", required)
-                input(ng-click="decrypt()", type="submit", value="Decrypt", ng-hide="message_view")
+                br
+                input(ng-click="decrypt()", type="submit", value="Decrypt", id="decrypt_button", ng-hide="message_view", class="pure-button button-large")
         br
         textarea(ng-model="message_view", ng-hide="!message_view", class="center_div", rows="30", cols="100", readonly)
 
@@ -20,4 +21,5 @@ html(ng-app="privnote")
             div(class="cssload-cube cssload-c2")
             div(class="cssload-cube cssload-c4")
             div(class="cssload-cube cssload-c3")
+    include footer.jade
 
