@@ -32,6 +32,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
     $scope.storage_set = get_recent_links();
     $scope.links = get_recent_links();
     $scope.id = "";
+    $scope.note = "";
 
     var port = (location.port == 80 || location.port == 443) ? "" : ":" + location.port;
     $scope.url = location.protocol + "//" + location.hostname + port + "/";
@@ -104,6 +105,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
             data: JSON.stringify({ "data": base64_payload,
                                    "salt": base64_salt,
                                    "filename": filename_to_encrypt,
+                                   "note": $scope.note,
                                    "one_time_read": one_time_read }),
             headers: {'Content-Type': 'application/json'}
           }).success(function (data, status, headers, config) {
@@ -111,7 +113,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
                 button.removeAttribute("disabled");
 
                 ngDialog.open({
-                    template: '/static/dialog.html',
+                    template: '/static/dialogs/new_key.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
                 });
@@ -171,7 +173,6 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
 
 
 privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
-
     $scope.spinner = false;
 
     $scope.decrypt = function() {
@@ -216,7 +217,7 @@ privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
                 if (plaintext === "")
                     throw Error();
             } catch (e) {
-                alert("Wrong password");
+                sweetAlert("Error", "Wrong password", "error");
                 $scope.spinner = false;
                 return;
             }

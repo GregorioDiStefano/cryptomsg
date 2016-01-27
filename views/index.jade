@@ -19,6 +19,8 @@ html(ng-app="privnote")
             form(class="pure-form")
                 input(type="text", ng-model="password", placeholder="Password", required)
                 p
+                input(type="text", ng-model="note", size="80", placeholder="Optional: Unencrypted note to recipient", required)
+                p
                 input(type="checkbox", id="delete", class="chkbox", ng-model="one_read", ng-click='delete_on_read(one_read)', checked)
                 label(for="delete")="Delete after retrieved"
                 br

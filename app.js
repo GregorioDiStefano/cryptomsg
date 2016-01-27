@@ -38,8 +38,11 @@ app.get('/:id', function (req, res) {
         if(cb instanceof Error)
             res.status(404).send("Invalid key");
         else {
-            var one_time_read = JSON.parse(cb).one_time_read;
-            res.render('decrypt', {"one_time_read": one_time_read});
+            var data = JSON.parse(cb);
+            var one_time_read = data.one_time_read;
+            var note = data.note;
+
+            res.render('decrypt', {"one_time_read": one_time_read, "note": note});
         }
     });
 });

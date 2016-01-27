@@ -9,6 +9,8 @@ html(ng-app="privnote")
                 span warning: 
                 | The encrypted message/data will be destroy 5 minutes after pressing the button.
         div(id="decryption_form", class="center")
+            if (note)
+                h3 Note: #{note}
             form
                 input(ng-model="password", placeholder="password", type="password", ng-hide="message_view", required)
                 br
