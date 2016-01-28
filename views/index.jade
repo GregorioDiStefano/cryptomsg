@@ -10,7 +10,7 @@ html(ng-app="privnote")
                 p="Your recent links"
                     ul
                         li(ng-repeat="link in links")
-                            {{ link }}
+                            |{{link}}
             textarea(ng-model="data", rows="20", cols="80", placeholder="Enter you message here", ng-disabled="file_set", ng-change="set_text(data)")
             p
             | or file: 
@@ -19,7 +19,7 @@ html(ng-app="privnote")
             form(class="pure-form")
                 input(type="text", ng-model="password", placeholder="Password", required)
                 p
-                input(type="text", ng-model="note", size="80", placeholder="Optional: Unencrypted note to recipient", required)
+                input(type="text", ng-model="note", size="80", placeholder="Optional: Unencrypted note to recipient", maxlength=100, required)
                 p
                 input(type="checkbox", id="delete", class="chkbox", ng-model="one_read", ng-click='delete_on_read(one_read)', checked)
                 label(for="delete")="Delete after retrieved"

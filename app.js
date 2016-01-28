@@ -8,7 +8,7 @@ var favicon = require('serve-favicon');
 app.set('view engine', 'jade');
 app.set('views', './views');
 app.use('/static', express.static("static"));
-app.use(bodyParser.json(({limit: '6.8mb'})));
+app.use(bodyParser.json(({limit: '10mb'})));
 app.use(favicon('static/favicon.ico'));
 
 app.get('/', function (req, res) {
@@ -40,7 +40,7 @@ app.get('/:id', function (req, res) {
         else {
             var data = JSON.parse(cb);
             var one_time_read = data.one_time_read;
-            var note = data.note;
+            var note = data.note.substr(0, 100);
 
             res.render('decrypt', {"one_time_read": one_time_read, "note": note});
         }

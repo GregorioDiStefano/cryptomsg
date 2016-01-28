@@ -44,6 +44,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
     function set_recent_link(uid) {
         if (localStorage.getObj("links") === null) {
             localStorage.setObj("links", uid);
+            $scope.links = get_recent_links();
             $scope.storage_set = true;
         } else {
             localStorage.setObj("links", uid + "," + localStorage.getObj("links"));
@@ -95,7 +96,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
                                            CryptoJS.enc.Hex.parse(key),
                                            { "iv": iv, "mode": CryptoJS.mode.CBC });
 
-        var base64_payload = CryptoJS.enc.Base64.stringify(rawEnc.ciphertext);
+        var base64_payload = rawEnc.toString();
         var base64_salt = CryptoJS.enc.Base64.stringify(salt);
 
 
