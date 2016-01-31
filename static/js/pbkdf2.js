@@ -1,19 +1,185 @@
 /*
-CryptoJS v3.1.2
-code.google.com/p/crypto-js
-(c) 2009-2013 by Jeff Mott. All rights reserved.
-code.google.com/p/crypto-js/wiki/License
-*/
-var CryptoJS=CryptoJS||function(g,j){var e={},d=e.lib={},m=function(){},n=d.Base={extend:function(a){m.prototype=this;var c=new m;a&&c.mixIn(a);c.hasOwnProperty("init")||(c.init=function(){c.$super.init.apply(this,arguments)});c.init.prototype=c;c.$super=this;return c},create:function(){var a=this.extend();a.init.apply(a,arguments);return a},init:function(){},mixIn:function(a){for(var c in a)a.hasOwnProperty(c)&&(this[c]=a[c]);a.hasOwnProperty("toString")&&(this.toString=a.toString)},clone:function(){return this.init.prototype.extend(this)}},
-q=d.WordArray=n.extend({init:function(a,c){a=this.words=a||[];this.sigBytes=c!=j?c:4*a.length},toString:function(a){return(a||l).stringify(this)},concat:function(a){var c=this.words,p=a.words,f=this.sigBytes;a=a.sigBytes;this.clamp();if(f%4)for(var b=0;b<a;b++)c[f+b>>>2]|=(p[b>>>2]>>>24-8*(b%4)&255)<<24-8*((f+b)%4);else if(65535<p.length)for(b=0;b<a;b+=4)c[f+b>>>2]=p[b>>>2];else c.push.apply(c,p);this.sigBytes+=a;return this},clamp:function(){var a=this.words,c=this.sigBytes;a[c>>>2]&=4294967295<<
-32-8*(c%4);a.length=g.ceil(c/4)},clone:function(){var a=n.clone.call(this);a.words=this.words.slice(0);return a},random:function(a){for(var c=[],b=0;b<a;b+=4)c.push(4294967296*g.random()|0);return new q.init(c,a)}}),b=e.enc={},l=b.Hex={stringify:function(a){var c=a.words;a=a.sigBytes;for(var b=[],f=0;f<a;f++){var d=c[f>>>2]>>>24-8*(f%4)&255;b.push((d>>>4).toString(16));b.push((d&15).toString(16))}return b.join("")},parse:function(a){for(var c=a.length,b=[],f=0;f<c;f+=2)b[f>>>3]|=parseInt(a.substr(f,
-2),16)<<24-4*(f%8);return new q.init(b,c/2)}},k=b.Latin1={stringify:function(a){var c=a.words;a=a.sigBytes;for(var b=[],f=0;f<a;f++)b.push(String.fromCharCode(c[f>>>2]>>>24-8*(f%4)&255));return b.join("")},parse:function(a){for(var c=a.length,b=[],f=0;f<c;f++)b[f>>>2]|=(a.charCodeAt(f)&255)<<24-8*(f%4);return new q.init(b,c)}},h=b.Utf8={stringify:function(a){try{return decodeURIComponent(escape(k.stringify(a)))}catch(b){throw Error("Malformed UTF-8 data");}},parse:function(a){return k.parse(unescape(encodeURIComponent(a)))}},
-u=d.BufferedBlockAlgorithm=n.extend({reset:function(){this._data=new q.init;this._nDataBytes=0},_append:function(a){"string"==typeof a&&(a=h.parse(a));this._data.concat(a);this._nDataBytes+=a.sigBytes},_process:function(a){var b=this._data,d=b.words,f=b.sigBytes,l=this.blockSize,e=f/(4*l),e=a?g.ceil(e):g.max((e|0)-this._minBufferSize,0);a=e*l;f=g.min(4*a,f);if(a){for(var h=0;h<a;h+=l)this._doProcessBlock(d,h);h=d.splice(0,a);b.sigBytes-=f}return new q.init(h,f)},clone:function(){var a=n.clone.call(this);
-a._data=this._data.clone();return a},_minBufferSize:0});d.Hasher=u.extend({cfg:n.extend(),init:function(a){this.cfg=this.cfg.extend(a);this.reset()},reset:function(){u.reset.call(this);this._doReset()},update:function(a){this._append(a);this._process();return this},finalize:function(a){a&&this._append(a);return this._doFinalize()},blockSize:16,_createHelper:function(a){return function(b,d){return(new a.init(d)).finalize(b)}},_createHmacHelper:function(a){return function(b,d){return(new w.HMAC.init(a,
-d)).finalize(b)}}});var w=e.algo={};return e}(Math);
-(function(){var g=CryptoJS,j=g.lib,e=j.WordArray,d=j.Hasher,m=[],j=g.algo.SHA1=d.extend({_doReset:function(){this._hash=new e.init([1732584193,4023233417,2562383102,271733878,3285377520])},_doProcessBlock:function(d,e){for(var b=this._hash.words,l=b[0],k=b[1],h=b[2],g=b[3],j=b[4],a=0;80>a;a++){if(16>a)m[a]=d[e+a]|0;else{var c=m[a-3]^m[a-8]^m[a-14]^m[a-16];m[a]=c<<1|c>>>31}c=(l<<5|l>>>27)+j+m[a];c=20>a?c+((k&h|~k&g)+1518500249):40>a?c+((k^h^g)+1859775393):60>a?c+((k&h|k&g|h&g)-1894007588):c+((k^h^
-g)-899497514);j=g;g=h;h=k<<30|k>>>2;k=l;l=c}b[0]=b[0]+l|0;b[1]=b[1]+k|0;b[2]=b[2]+h|0;b[3]=b[3]+g|0;b[4]=b[4]+j|0},_doFinalize:function(){var d=this._data,e=d.words,b=8*this._nDataBytes,l=8*d.sigBytes;e[l>>>5]|=128<<24-l%32;e[(l+64>>>9<<4)+14]=Math.floor(b/4294967296);e[(l+64>>>9<<4)+15]=b;d.sigBytes=4*e.length;this._process();return this._hash},clone:function(){var e=d.clone.call(this);e._hash=this._hash.clone();return e}});g.SHA1=d._createHelper(j);g.HmacSHA1=d._createHmacHelper(j)})();
-(function(){var g=CryptoJS,j=g.enc.Utf8;g.algo.HMAC=g.lib.Base.extend({init:function(e,d){e=this._hasher=new e.init;"string"==typeof d&&(d=j.parse(d));var g=e.blockSize,n=4*g;d.sigBytes>n&&(d=e.finalize(d));d.clamp();for(var q=this._oKey=d.clone(),b=this._iKey=d.clone(),l=q.words,k=b.words,h=0;h<g;h++)l[h]^=1549556828,k[h]^=909522486;q.sigBytes=b.sigBytes=n;this.reset()},reset:function(){var e=this._hasher;e.reset();e.update(this._iKey)},update:function(e){this._hasher.update(e);return this},finalize:function(e){var d=
-this._hasher;e=d.finalize(e);d.reset();return d.finalize(this._oKey.clone().concat(e))}})})();
-(function(){var g=CryptoJS,j=g.lib,e=j.Base,d=j.WordArray,j=g.algo,m=j.HMAC,n=j.PBKDF2=e.extend({cfg:e.extend({keySize:4,hasher:j.SHA1,iterations:1}),init:function(d){this.cfg=this.cfg.extend(d)},compute:function(e,b){for(var g=this.cfg,k=m.create(g.hasher,e),h=d.create(),j=d.create([1]),n=h.words,a=j.words,c=g.keySize,g=g.iterations;n.length<c;){var p=k.update(b).finalize(j);k.reset();for(var f=p.words,v=f.length,s=p,t=1;t<g;t++){s=k.finalize(s);k.reset();for(var x=s.words,r=0;r<v;r++)f[r]^=x[r]}h.concat(p);
-a[0]++}h.sigBytes=4*c;return h}});g.PBKDF2=function(d,b,e){return n.create(e).compute(d,b)}})();
+ * JavaScript implementation of Password-Based Key Derivation Function 2
+ * (PBKDF2) as defined in RFC 2898.
+ * Version 1.5 
+ * Copyright (c) 2007, 2008, 2009, 2010, 2011, 2012, 2013 Parvez Anandam
+ * parvez@anandam.com
+ * http://anandam.com/pbkdf2
+ *
+ * Distributed under the BSD license
+ *
+ * Uses Paul Johnston's excellent SHA-1 JavaScript library sha1.js:
+ * http://pajhome.org.uk/crypt/md5/sha1.html
+ * (uses the binb_sha1(), rstr2binb(), binb2str(), rstr2hex() functions from that libary)
+ *
+ * Thanks to Felix Gartsman for pointing out a bug in version 1.0
+ * Thanks to Thijs Van der Schaeghe for pointing out a bug in version 1.1 
+ * Thanks to Richard Gautier for asking to clarify dependencies in version 1.2
+ * Updated contact information from version 1.3
+ * Thanks to Stuart Heinrich for pointing out updates to PAJ's SHA-1 library in version 1.4
+ */
+
+
+/*
+ * The four arguments to the constructor of the PBKDF2 object are 
+ * the password, salt, number of iterations and number of bytes in
+ * generated key. This follows the RFC 2898 definition: PBKDF2 (P, S, c, dkLen)
+ *
+ * The method deriveKey takes two parameters, both callback functions:
+ * the first is used to provide status on the computation, the second
+ * is called with the result of the computation (the generated key in hex).
+ *
+ * Example of use:
+ *
+ *    <script src="sha1.js"></script>
+ *    <script src="pbkdf2.js"></script>
+ *    <script>
+ *    var mypbkdf2 = new PBKDF2("mypassword", "saltines", 1000, 16);
+ *    var status_callback = function(percent_done) {
+ *        document.getElementById("status").innerHTML = "Computed " + percent_done + "%"};
+ *    var result_callback = function(key) {
+ *        document.getElementById("status").innerHTML = "The derived key is: " + key};
+ *    mypbkdf2.deriveKey(status_callback, result_callback);
+ *    </script>
+ *    <div id="status"></div>
+ *
+ */
+
+function PBKDF2(password, salt, num_iterations, num_bytes)
+{
+	// Remember the password and salt
+	var m_bpassword = rstr2binb(password);
+	var m_salt = salt;
+
+	// Total number of iterations
+	var m_total_iterations = num_iterations;
+
+	// Run iterations in chunks instead of all at once, so as to not block.
+	// Define size of chunk here; adjust for slower or faster machines if necessary.
+	var m_iterations_in_chunk = 10;
+
+	// Iteration counter
+	var m_iterations_done = 0;
+
+	// Key length, as number of bytes
+	var m_key_length = num_bytes;
+
+	// The hash cache
+	var m_hash = null;
+
+	// The length (number of bytes) of the output of the pseudo-random function.
+	// Since HMAC-SHA1 is the standard, and what is used here, it's 20 bytes.
+	var m_hash_length = 20;
+
+	// Number of hash-sized blocks in the derived key (called 'l' in RFC2898)
+	var m_total_blocks = Math.ceil(m_key_length/m_hash_length);
+
+	// Start computation with the first block
+	var m_current_block = 1;
+
+	// Used in the HMAC-SHA1 computations
+	var m_ipad = new Array(16);
+	var m_opad = new Array(16);
+
+	// This is where the result of the iterations gets sotred
+	var m_buffer = new Array(0x0,0x0,0x0,0x0,0x0);
+	
+	// The result
+	var m_key = "";
+
+	// This object
+	var m_this_object = this;
+
+	// The function to call with the result
+	var m_result_func;
+
+	// The function to call with status after computing every chunk
+	var m_status_func;
+	
+	// Set up the HMAC-SHA1 computations
+	if (m_bpassword.length > 16) m_bpassword = binb_sha1(m_bpassword, password.length * chrsz);
+	for(var i = 0; i < 16; ++i)
+	{
+		m_ipad[i] = m_bpassword[i] ^ 0x36363636;
+		m_opad[i] = m_bpassword[i] ^ 0x5C5C5C5C;
+	}
+
+
+	// Starts the computation
+	this.deriveKey = function(status_callback, result_callback)
+	{
+		m_status_func = status_callback;
+		m_result_func = result_callback;
+		setTimeout(function() { m_this_object.do_PBKDF2_iterations() }, 0);
+	}
+
+
+	// The workhorse
+	this.do_PBKDF2_iterations = function()
+	{
+		var iterations = m_iterations_in_chunk;
+		if (m_total_iterations - m_iterations_done < m_iterations_in_chunk)
+			iterations = m_total_iterations - m_iterations_done;
+			
+		for(var i=0; i<iterations; ++i)
+		{
+			// compute HMAC-SHA1 
+			if (m_iterations_done == 0)
+			{
+				var salt_block = m_salt +
+						String.fromCharCode(m_current_block >> 24 & 0xF) +
+						String.fromCharCode(m_current_block >> 16 & 0xF) +
+						String.fromCharCode(m_current_block >>  8 & 0xF) +
+						String.fromCharCode(m_current_block       & 0xF);
+
+				m_hash = binb_sha1(m_ipad.concat(rstr2binb(salt_block)),
+								   512 + salt_block.length * 8);
+				m_hash = binb_sha1(m_opad.concat(m_hash), 512 + 160);
+			}
+			else
+			{
+				m_hash = binb_sha1(m_ipad.concat(m_hash), 
+								   512 + m_hash.length * 32);
+				m_hash = binb_sha1(m_opad.concat(m_hash), 512 + 160);
+			}
+
+        	for(var j=0; j<m_hash.length; ++j)
+                	m_buffer[j] ^= m_hash[j];
+
+			m_iterations_done++;
+		}
+
+		// Call the status callback function
+		m_status_func( (m_current_block - 1 + m_iterations_done/m_total_iterations) / m_total_blocks * 100);
+
+		if (m_iterations_done < m_total_iterations)
+		{
+			setTimeout(function() { m_this_object.do_PBKDF2_iterations() }, 0);
+		}
+		else
+		{
+			if (m_current_block < m_total_blocks)
+			{
+				// Compute the next block (T_i in RFC 2898)
+				
+				m_key += rstr2hex(binb2rstr(m_buffer));
+			
+				m_current_block++;
+				m_buffer = new Array(0x0,0x0,0x0,0x0,0x0);
+				m_iterations_done = 0;
+
+				setTimeout(function() { m_this_object.do_PBKDF2_iterations() }, 0);
+			}
+			else
+			{
+				// We've computed the final block T_l; we're done.
+			
+				var tmp = rstr2hex(binb2rstr(m_buffer));
+				m_key += tmp.substr(0, (m_key_length - (m_total_blocks - 1) * m_hash_length) * 2 );
+				
+				// Call the result callback function
+				m_result_func(m_key);
+			}
+		}
+	}
+}

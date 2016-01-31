@@ -1,21 +1,17 @@
 var privnote = angular.module('privnote', ['ngDialog']);
 
-function get_key_and_iv(salt, password) {
-    var iterations = 1000;
-    var keySize = 256;
-    var ivSize = 128;
+function get_key_and_iv(salt, password, cb) {
+    var mypbkdf2 = new PBKDF2(password, salt, 5000, 32);
 
-    var output = CryptoJS.PBKDF2(password, salt, {
-            keySize: (keySize+ivSize)/32,
-            iterations: iterations
-    });
+    var result_callback = function(key) {
+        var iv = CryptoJS.lib.WordArray.create(key.slice(0, 32));
+        cb({ "key": key, "iv": iv });
+    };
 
-    output.clamp();
-
-    var key = CryptoJS.lib.WordArray.create(output.words.slice(0, keySize/32));
-    var iv = CryptoJS.lib.WordArray.create(output.words.slice(keySize/32));
-
-    return { "key": key, "iv": iv };
+    var status_callback = function(status) {
+        document.getElementById("key_generation_status").innerHTML = status.toFixed(2) + "%";
+    };
+    mypbkdf2.deriveKey(status_callback, result_callback);
 }
 
 
@@ -87,29 +83,29 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
         var password = $scope.password;
 
         var salt = CryptoJS.lib.WordArray.random(128/8);
-        var data = get_key_and_iv(salt, password);
+        get_key_and_iv(salt, password, function(data) {
 
-        var key = data.key;
-        var iv = data.iv;
+            var key = data.key;
+            var iv = data.iv;
 
-        var rawEnc = CryptoJS.AES.encrypt( plaintext,
+            var rawEnc = CryptoJS.AES.encrypt( plaintext,
                                            CryptoJS.enc.Hex.parse(key),
                                            { "iv": iv, "mode": CryptoJS.mode.CBC });
 
-        var base64_payload = rawEnc.toString();
-        var base64_salt = CryptoJS.enc.Base64.stringify(salt);
+            var base64_payload = rawEnc.toString();
+            var base64_salt = CryptoJS.enc.Base64.stringify(salt);
 
 
-        $http({
-            url: '/post',
-            method: "POST",
-            data: JSON.stringify({ "data": base64_payload,
-                                   "salt": base64_salt,
-                                   "filename": filename_to_encrypt,
-                                   "note": $scope.note,
-                                   "one_time_read": one_time_read }),
-            headers: {'Content-Type': 'application/json'}
-          }).success(function (data, status, headers, config) {
+            $http({
+                url: '/post',
+                method: "POST",
+                data: JSON.stringify({ "data": base64_payload,
+                                       "salt": base64_salt,
+                                       "filename": filename_to_encrypt,
+                                       "note": $scope.note,
+                                       "one_time_read": one_time_read }),
+                headers: {'Content-Type': 'application/json'}
+            }).success(function (data, status, headers, config) {
                 $scope.id = data.id;
                 button.removeAttribute("disabled");
 
@@ -123,6 +119,9 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
                 $scope.status = status + ' ' + headers;
                 button.removeAttribute("disabled");
             });
+        });
+
+
     };
 
     $scope.set_file = function(file) {
@@ -199,18 +198,18 @@ privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
             ciphertext = CryptoJS.enc.Base64.parse(ciphertext);
             salt = CryptoJS.enc.Base64.parse(salt);
 
-            var data = get_key_and_iv(salt, $scope.password);
-            var key = data.key;
-            var iv = data.iv;
+            get_key_and_iv(salt, $scope.password, function(data) {
+                var key = data.key;
+                var iv = data.iv;
 
-            var plaintext = CryptoJS.AES.decrypt(
-              {
-                ciphertext: ciphertext,
-                salt: salt
-              },
-              CryptoJS.enc.Hex.parse(key),
-              { iv: iv, mode: CryptoJS.mode.CBC }
-            );
+                var plaintext = CryptoJS.AES.decrypt(
+                                {
+                                    ciphertext: ciphertext,
+                                    salt: salt
+                                },
+                                CryptoJS.enc.Hex.parse(key),
+                                { iv: iv, mode: CryptoJS.mode.CBC }
+                );
 
 
             try {
@@ -220,6 +219,7 @@ privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
             } catch (e) {
                 sweetAlert("Error", "Wrong password", "error");
                 $scope.spinner = false;
+                $scope.$digest();
                 return;
             }
 
@@ -232,9 +232,11 @@ privnote.controller('decryption', ['$scope', "$http", function($scope, $http) {
                 saveAs(blob, filename);
             } else {
                 $scope.message_view = plaintext;
+                $scope.$digest();
             }
-
             $scope.spinner = false;
+            $scope.$digest();
+        });
         });
     };
 }]);

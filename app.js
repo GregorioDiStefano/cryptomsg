@@ -40,7 +40,7 @@ app.get('/:id', function (req, res) {
         else {
             var data = JSON.parse(cb);
             var one_time_read = data.one_time_read;
-            var note = data.note.substr(0, 100);
+            var note = data.note.substr(0, 100) || "";
 
             res.render('decrypt', {"one_time_read": one_time_read, "note": note});
         }

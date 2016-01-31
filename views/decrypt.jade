@@ -17,9 +17,8 @@ html(ng-app="privnote")
                 input(ng-click="decrypt()", type="submit", value="Decrypt", id="decrypt_button", ng-hide="message_view", class="pure-button button-large")
         br
         textarea(ng-model="message_view", ng-hide="!message_view", class="center_div", rows="30", cols="100", readonly)
-
+        p(id="key_generation_status", class="center")
         div(class="cssload-thecube", ng-show="spinner")
-            <p> ...Decrypting... <p>
             div(class="cssload-cube cssload-c1")
             div(class="cssload-cube cssload-c2")
             div(class="cssload-cube cssload-c4")
