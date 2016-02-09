@@ -1,7 +1,7 @@
 var privnote = angular.module('privnote', ['ngDialog']);
 
 function get_key_and_iv(salt, password, cb) {
-    var mypbkdf2 = new PBKDF2(password, salt, 5000, 32);
+    var mypbkdf2 = new PBKDF2(password, salt, 2500, 32);
 
     var result_callback = function(key) {
         var iv = CryptoJS.lib.WordArray.create(key.slice(0, 32));
@@ -37,26 +37,31 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
     var file_to_encrypt_data = "";
     var one_time_read;
 
-    function set_recent_link(uid) {
+    function set_recent_link(uid, note) {
+        note = note.substr(0, 10) + "..";
         if (localStorage.getObj("links") === null) {
-            localStorage.setObj("links", uid);
+            localStorage.setObj("links", [{"uid": uid, "note": note}]);
             $scope.links = get_recent_links();
             $scope.storage_set = true;
         } else {
-            localStorage.setObj("links", uid + "," + localStorage.getObj("links"));
+            var data = localStorage.getObj("links");
+            data.unshift({"uid": uid, "note": note});
+            localStorage.setObj("links", data);
             $scope.links = get_recent_links();
         }
     }
 
     function get_recent_links() {
         var links = localStorage.getObj("links");
+
         if (links)
-            return links.split(",").slice(0, 20);
+            return data;
+
         return false;
     }
 
     $rootScope.$on('ngDialog.opened', function (e, $dialog) {
-        set_recent_link($scope.id);
+        set_recent_link($scope.id, $scope.note);
         var qrcode = new QRCode("qrcode", {
             text: $scope.url + $scope.id,
             width: 128*1.5,
