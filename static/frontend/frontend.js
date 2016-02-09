@@ -55,7 +55,7 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
         var links = localStorage.getObj("links");
 
         if (links)
-            return data;
+            return links;
 
         return false;
     }
