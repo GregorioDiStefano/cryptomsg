@@ -9,7 +9,11 @@ html(ng-app="privnote")
             div(id="left_side", ng-show="storage_set")
                 ul
                     li(ng-repeat="link in links")
-                        |{{link.uid}} - {{link.note}}
+                        div(ng-switch="link.note || 'null'")
+                            div(ng-switch-default)
+                                |{{link.uid}} - {{link.note}}
+                            div(ng-switch-when="null")
+                                |{{link.uid}}
             textarea(ng-model="data", rows="20", cols="80", placeholder="Enter you message here", ng-disabled="file_set", ng-change="set_text(data)")
             p
             | or file: 

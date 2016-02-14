@@ -38,7 +38,10 @@ privnote.controller('encryption', ['$scope', "$rootScope", "$http", "ngDialog", 
     var one_time_read;
 
     function set_recent_link(uid, note) {
-        note = note.substr(0, 10) + "..";
+        if (note.length > 10)
+            note = note.substr(0, 10) + "..";
+        else if (note === "" || !note)
+            note = undefined;
         if (localStorage.getObj("links") === null) {
             localStorage.setObj("links", [{"uid": uid, "note": note}]);
             $scope.links = get_recent_links();
